@@ -9,19 +9,25 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         :root { --tortora: #8d8478; --tortora-light: #bdae9b; --antracite: #333333; }
         
-        /* Animazione per l'apertura carrello su mobile */
         #mobileCartPanel { transition: transform 0.3s ease-in-out; transform: translateY(100%); }
         #mobileCartPanel.open { transform: translateY(0); }
         
         .choosing-freebie-mode { border: 6px solid #bdae9b !important; }
         .cart-item { border-left: 3px solid var(--tortora); }
         
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(189, 174, 155, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(189, 174, 155, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(189, 174, 155, 0); }
+        }
+        .animate-gold { animation: pulse-gold 2s infinite; }
+
         @media (min-width: 1024px) {
             .cart-container { max-height: calc(100vh - 120px); overflow-y: auto; }
         }
     </style>
 </head>
-<body class="bg-[#f8f7f5] text-[#333333] font-sans pb-24 lg:pb-0">
+<body class="bg-[#f8f7f5] text-[#333333] font-sans pb-32 lg:pb-0">
 
     <header class="bg-[#333333] text-[#f4f4f2] p-6 shadow-xl text-center sticky top-0 z-50">
         <h1 class="text-2xl font-light uppercase tracking-[0.3em]">Luxury Essences</h1>
@@ -46,30 +52,25 @@
                 </div>
             </div>
 
-            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                </div>
+            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
         <div class="hidden lg:block lg:w-1/3">
             <div class="bg-white p-6 shadow-2xl sticky lg:top-24 border border-gray-100 cart-container">
                 <h2 class="text-xs font-bold uppercase tracking-widest mb-4 border-b pb-4 text-gray-400">Il Tuo Carrello</h2>
-                <div id="cartList" class="space-y-3 mb-6 overflow-y-auto pr-2"></div>
+                <div id="cartList" class="space-y-3 mb-6"></div>
                 <div id="promoBox" class="hidden bg-[#f4f1ee] p-4 mb-6 border border-[#d1c7bc]">
                     <p id="promoText" class="text-[10px] font-bold text-[#8d8478] uppercase text-center"></p>
                     <div id="freebieBtn" class="mt-3 hidden">
                         <button onclick="startFreebieSelection()" class="w-full bg-[#8d8478] text-white py-3 text-[10px] font-black">SCEGLI OMAGGIO +</button>
                     </div>
                 </div>
-                <div class="border-t pt-4 mb-6">
-                    <div class="flex justify-between items-end mb-2">
-                        <span class="text-[10px] uppercase text-gray-400">Totale:</span>
-                        <span class="choganTotalDisplay text-3xl font-light text-antracite">0.00 €</span>
-                    </div>
-                    <p class="text-[11px] text-green-600 font-bold uppercase text-center bg-gray-50 py-2">Risparmio: <span class="savingsDisplay">0.00 €</span></p>
+                <div class="border-t pt-4 mb-6 text-center">
+                    <span class="text-[10px] uppercase text-gray-400">Totale:</span>
+                    <div class="choganTotalDisplay text-3xl font-light text-antracite">0.00 €</div>
+                    <p class="text-[11px] text-green-600 font-bold uppercase mt-2">Risparmio: <span class="savingsDisplay">0.00 €</span></p>
                 </div>
-                <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] tracking-[0.3em] border-2 border-[#bdae9b]">
-                    INVIA ORDINE WHATSAPP
-                </button>
+                <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
             </div>
         </div>
     </div>
@@ -80,32 +81,33 @@
             <button onclick="toggleMobileCart()" class="text-2xl font-light">✕</button>
         </div>
         <div id="cartListMobile" class="flex-1 overflow-y-auto space-y-3"></div>
-        <div id="promoBoxMobile" class="hidden bg-[#f4f1ee] p-4 my-4 border border-[#d1c7bc]">
-            <p id="promoTextMobile" class="text-[10px] font-bold text-[#8d8478] uppercase text-center"></p>
-            <button id="freebieBtnMobile" onclick="toggleMobileCart(); startFreebieSelection();" class="hidden w-full bg-[#8d8478] text-white py-3 mt-2 text-[10px] font-black uppercase">Scegli Omaggio +</button>
-        </div>
         <div class="border-t pt-4">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-xs uppercase font-bold">Totale: <span class="choganTotalDisplay text-xl ml-2">0.00 €</span></span>
-                <span class="text-[10px] text-green-600 font-bold uppercase">Risparmio: <span class="savingsDisplay">0.00 €</span></span>
-            </div>
-            <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] tracking-[0.2em] border-2 border-[#bdae9b]">
-                INVIA ORDINE WHATSAPP
-            </button>
+            <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
         </div>
     </div>
 
-    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-[#333333] text-white p-4 flex justify-between items-center z-[90] shadow-[0_-5px_20px_rgba(0,0,0,0.3)]">
-        <div onclick="toggleMobileCart()" class="flex flex-col">
-            <span class="text-[9px] uppercase tracking-widest text-[#bdae9b]">Totale Ordine</span>
-            <span class="choganTotalDisplay text-lg font-light">0.00 €</span>
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-[95]">
+        <div id="autoPromoMsg" class="hidden bg-[#bdae9b] text-[#333333] text-center py-2 text-[10px] font-bold uppercase tracking-widest border-t border-white shadow-lg">
+            <span id="autoPromoText">Aggiungi un altro 70ml per il REGALO!</span>
         </div>
-        <div class="flex gap-2">
-            <button onclick="toggleMobileCart()" class="bg-white/10 px-4 py-2 rounded text-[10px] uppercase font-bold relative">
-                Vedi Carrello
-                <span id="cartBadge" class="absolute -top-2 -right-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full flex items-center justify-center text-[10px]">0</span>
-            </button>
-            <button onclick="sendToWhatsApp()" class="bg-[#bdae9b] text-[#333333] px-4 py-2 rounded text-[10px] font-black uppercase">Ordina</button>
+        
+        <div class="bg-[#333333] text-white p-4 flex justify-between items-center shadow-[0_-5px_20px_rgba(0,0,0,0.3)]">
+            <div onclick="toggleMobileCart()" class="flex flex-col">
+                <span class="text-[9px] uppercase tracking-widest text-[#bdae9b]">Totale</span>
+                <span class="choganTotalDisplay text-xl font-light">0.00 €</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button id="quickFreebieBtn" onclick="startFreebieSelection()" class="hidden bg-[#bdae9b] text-[#333333] h-12 px-4 rounded font-black text-[10px] uppercase animate-gold">
+                    Scegli Regalo +
+                </button>
+                
+                <button onclick="toggleMobileCart()" class="bg-white/10 h-12 px-3 rounded text-[9px] uppercase font-bold relative flex items-center">
+                    Carrello <span id="cartBadge" class="ml-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full flex items-center justify-center text-[10px]">0</span>
+                </button>
+                
+                <button onclick="sendToWhatsApp()" class="bg-[#bdae9b] text-[#333333] h-12 px-4 rounded text-[10px] font-black uppercase">Invia</button>
+            </div>
         </div>
     </div>
 
@@ -115,9 +117,8 @@
         let freebie = null;
         const WHATSAPP_NUMBER = "393808671683"; 
 
-        const files = ['Profumi uomo-Tabella 1.csv', 'Profumi donna-Tabella 1.csv', 'Profumi Unisex-Tabella 1.csv', 'Profumi Luxury-Tabella 1.csv'];
-
         async function loadAllData() {
+            const files = ['Profumi uomo-Tabella 1.csv', 'Profumi donna-Tabella 1.csv', 'Profumi Unisex-Tabella 1.csv', 'Profumi Luxury-Tabella 1.csv'];
             for (const file of files) {
                 try {
                     const res = await fetch(file);
@@ -159,9 +160,7 @@
             `).join('');
         }
 
-        function toggleMobileCart() {
-            document.getElementById('mobileCartPanel').classList.toggle('open');
-        }
+        function toggleMobileCart() { document.getElementById('mobileCartPanel').classList.toggle('open'); }
 
         function addToCart(codice) {
             const item = allItems.find(p => p.cod === codice);
@@ -177,11 +176,6 @@
             }
             cart.push(item);
             updateUI();
-            
-            // Animazione badge mobile
-            const badge = document.getElementById('cartBadge');
-            badge.classList.add('scale-125');
-            setTimeout(() => badge.classList.remove('scale-125'), 200);
         }
 
         function updateUI() {
@@ -200,36 +194,45 @@
             document.getElementById('cartBadge').innerText = cart.length;
 
             if (freebie) {
-                const freebieHTML = `<div class="bg-[#fdfaf5] p-3 border border-[#e8dfd5] text-[10px] font-bold text-tortora mt-2">🎁 OMAGGIO: ${freebie.nome}</div>`;
-                document.getElementById('cartList').innerHTML += freebieHTML;
-                document.getElementById('cartListMobile').innerHTML += freebieHTML;
+                const fHTML = `<div class="bg-[#fdfaf5] p-3 border border-[#e8dfd5] text-[10px] font-bold text-tortora mt-2">🎁 OMAGGIO: ${freebie.nome}</div>`;
+                document.getElementById('cartList').innerHTML += fHTML;
+                document.getElementById('cartListMobile').innerHTML += fHTML;
             }
 
             const count70 = cart.filter(p => p.formato === '70ml').length;
             const count50 = cart.filter(p => p.formato.includes('50ml')).length;
-            const promoActive = (count70 >= 2 || count50 >= 2);
             
-            // Gestione Box Promo (Desktop e Mobile)
-            [document.getElementById('promoBox'), document.getElementById('promoBoxMobile')].forEach(box => {
-                box.classList.toggle('hidden', cart.length === 0);
-            });
+            // Logica Promo Visibile su Smartphone
+            const autoMsg = document.getElementById('autoPromoMsg');
+            const autoText = document.getElementById('autoPromoText');
+            const quickBtn = document.getElementById('quickFreebieBtn');
 
-            const promoTexts = [document.getElementById('promoText'), document.getElementById('promoTextMobile')];
-            const promoBtns = [document.getElementById('freebieBtn'), document.getElementById('freebieBtnMobile')];
-
-            if (promoActive) {
-                promoTexts.forEach(t => t.innerText = "✨ REGALO SBLOCCATO!");
-                promoBtns.forEach(b => b.classList.toggle('hidden', !!freebie));
+            if (count70 >= 2 || count50 >= 2) {
+                autoMsg.classList.remove('hidden');
+                autoText.innerText = "✨ PROMO ATTIVA: OMAGGIO SBLOCCATO!";
+                quickBtn.classList.toggle('hidden', !!freebie);
+                // Desktop
+                document.getElementById('promoBox').classList.remove('hidden');
+                document.getElementById('promoText').innerText = "✨ REGALO SBLOCCATO!";
+                document.getElementById('freebieBtn').classList.toggle('hidden', !!freebie);
+            } else if (count70 === 1 || count50 === 1) {
+                autoMsg.classList.remove('hidden');
+                autoText.innerText = "💡 AGGIUNGI UN ALTRO PEZZO PER IL REGALO!";
+                quickBtn.classList.add('hidden');
+                // Desktop
+                document.getElementById('promoBox').classList.remove('hidden');
+                document.getElementById('promoText').innerText = "💡 AGGIUNGI UN ALTRO PER IL REGALO";
+                document.getElementById('freebieBtn').classList.add('hidden');
             } else {
-                promoTexts.forEach(t => t.innerText = "💡 AGGIUNGI UN ALTRO PEZZO PER IL REGALO");
-                promoBtns.forEach(b => b.classList.add('hidden'));
+                autoMsg.classList.add('hidden');
+                quickBtn.classList.add('hidden');
+                document.getElementById('promoBox').classList.add('hidden');
             }
 
             const total = cart.reduce((s, p) => s + p.prezzo, 0);
             const retail = cart.reduce((s, p) => s + (p.formato.includes('50ml') ? 310 : 145), 0) + (freebie ? 80 : 0);
-            
             document.querySelectorAll('.choganTotalDisplay').forEach(el => el.innerText = `${total.toFixed(2)} €`);
-            document.querySelectorAll('.savingsDisplay').forEach(el => el.innerText = `${(retail - total).toFixed(2)} €`);
+            document.querySelectorAll('.savingsDisplay').forEach(el => el.innerText = `${ retail === 0 ? '0.00' : (retail - total).toFixed(2)} €`);
         }
 
         function removeFromCart(i) {
@@ -241,6 +244,7 @@
         function startFreebieSelection() {
             document.body.classList.add('choosing-freebie-mode');
             document.getElementById('selectionBanner').classList.remove('hidden');
+            if(document.getElementById('mobileCartPanel').classList.contains('open')) toggleMobileCart();
             filterBy('30ml');
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
