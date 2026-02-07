@@ -38,7 +38,7 @@
         
         <div class="lg:w-2/3">
             <div class="bg-white p-5 shadow-sm mb-6 sticky top-24 z-40 border border-gray-100">
-                <input type="text" id="searchInput" placeholder="Cerca fragranza o codice..." 
+                <input type="text" id="searchInput" placeholder="Cerca fragranza, marca (es. Dior) o codice..." 
                        class="w-full p-4 bg-[#fdfdfd] border border-gray-200 outline-none focus:border-tortora text-xs tracking-widest uppercase mb-4">
                 
                 <div id="formatFilters" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
@@ -140,6 +140,7 @@
 
                 const nome = col[0].trim();
                 const isp = col[1].trim();
+                const marca = col[2] ? col[2].trim() : "";
                 const genere = col[12] ? col[12].trim().toLowerCase() : 'unisex';
 
                 const add = (cod, pr, mkt, form) => {
@@ -147,7 +148,7 @@
                         let p = pr.replace('€', '').replace(',', '.').trim();
                         let prezzo = parseFloat(p);
                         if (!isNaN(prezzo)) {
-                            allItems.push({ cod: cod.trim(), nome, isp, formato: form, prezzo, mkt: parseFloat(mkt), genere });
+                            allItems.push({ cod: cod.trim(), nome, isp, marca, formato: form, prezzo, mkt: parseFloat(mkt), genere });
                         }
                     }
                 };
@@ -163,9 +164,18 @@
         function applyFilters() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             let filtered = allItems;
+            
             if (currentFormat !== 'all') filtered = filtered.filter(p => p.formato.toLowerCase().includes(currentFormat));
             if (currentGender !== 'all') filtered = filtered.filter(p => p.genere === currentGender);
-            if (search) filtered = filtered.filter(p => p.nome.toLowerCase().includes(search) || p.isp.toLowerCase().includes(search) || p.cod.toLowerCase().includes(search));
+            
+            if (search) {
+                filtered = filtered.filter(p => 
+                    p.nome.toLowerCase().includes(search) || 
+                    p.isp.toLowerCase().includes(search) || 
+                    p.marca.toLowerCase().includes(search) || 
+                    p.cod.toLowerCase().includes(search)
+                );
+            }
 
             document.getElementById('productGrid').innerHTML = filtered.map(p => `
                 <div class="bg-white p-5 border border-gray-100 flex justify-between items-center shadow-sm">
@@ -175,7 +185,8 @@
                             <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded uppercase">${p.genere}</span>
                         </div>
                         <h3 class="font-bold text-xs uppercase tracking-widest mt-1">${p.nome}</h3>
-                        <p class="text-[9px] text-gray-400 uppercase italic tracking-wider">${p.isp}</p>
+                        <p class="text-[9px] text-gray-500 uppercase font-medium">Ispirato a: ${p.isp}</p>
+                        <p class="text-[9px] text-gray-300 uppercase italic tracking-tighter">${p.marca}</p>
                         <p class="mt-1 font-light text-antracite text-lg">${p.prezzo.toFixed(2)} €</p>
                     </div>
                     <button onclick="addToCart('${p.cod}')" class="bg-gray-50 w-12 h-12 rounded-full text-2xl shadow-sm active:bg-tortora active:text-white transition-all">+</button>
