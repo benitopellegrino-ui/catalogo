@@ -185,7 +185,7 @@
         function displayProducts(list) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = list.map(p => `
-                <div class="bg-white p-5 border border-gray-100 flex justify-between items-center">
+                <div class="bg-white p-5 border border-gray-100 flex justify-between items-center shadow-sm">
                     <div class="flex-1">
                         <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-tortora border border-gray-200 uppercase">${p.formato}</span>
                         <h3 class="font-bold text-xs uppercase tracking-widest mt-1">${p.nome}</h3>
@@ -258,28 +258,35 @@
             const count50 = cart.filter(p => p.formato.includes('50ml')).length;
             const promoActive = (count70 >= 2 || count50 >= 2);
             
-            const autoMsg = document.getElementById('autoPromoMsg');
-            const autoText = document.getElementById('autoPromoText');
+            const autoMsg = document.getElementById('autoPromoMsg'); // Smartphone
+            const autoText = document.getElementById('autoPromoText'); // Smartphone
+            const promoBox = document.getElementById('promoBox'); // PC
+            const promoText = document.getElementById('promoText'); // PC
             const quickBtn = document.getElementById('quickFreebieBtn');
+            const freebieBtn = document.getElementById('freebieBtn');
 
             if (promoActive) {
+                const msgSbloccato = "✨ PROMO ATTIVA: OMAGGIO SBLOCCATO!";
                 autoMsg.classList.remove('hidden');
-                autoText.innerText = "✨ PROMO ATTIVA: OMAGGIO SBLOCCATO!";
+                autoText.innerText = msgSbloccato;
                 quickBtn.classList.toggle('hidden', !!freebie);
-                document.getElementById('promoBox').classList.remove('hidden');
-                document.getElementById('promoText').innerText = "✨ REGALO SBLOCCATO!";
-                document.getElementById('freebieBtn').classList.toggle('hidden', !!freebie);
+                promoBox.classList.remove('hidden');
+                promoText.innerText = msgSbloccato;
+                freebieBtn.classList.toggle('hidden', !!freebie);
+
             } else if (count70 === 1 || count50 === 1) {
+                const msgQuasi = "💡 Aggiungi un altro da 70ml o 50ml per l'Omaggio 30ml!";
                 autoMsg.classList.remove('hidden');
-                autoText.innerText = "💡 Aggiungi un altro da 70ml o 50ml per l'Omaggio 30ml!";
+                autoText.innerText = msgQuasi;
                 quickBtn.classList.add('hidden');
-                document.getElementById('promoBox').classList.remove('hidden');
-                document.getElementById('promoText').innerText = "💡 AGGIUNGI UN ALTRO PER IL REGALO";
-                document.getElementById('freebieBtn').classList.add('hidden');
+                promoBox.classList.remove('hidden');
+                promoText.innerText = msgQuasi;
+                freebieBtn.classList.add('hidden');
+
             } else {
                 autoMsg.classList.add('hidden');
                 quickBtn.classList.add('hidden');
-                document.getElementById('promoBox').classList.add('hidden');
+                promoBox.classList.add('hidden');
             }
 
             const total = cart.reduce((s, p) => s + p.prezzo, 0);
