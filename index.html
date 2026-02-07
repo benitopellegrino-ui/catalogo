@@ -35,14 +35,13 @@
     </header>
 
     <div class="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-6 p-4">
-        
         <div class="lg:w-2/3">
             <div class="bg-white p-5 shadow-sm mb-6 sticky top-24 z-40 border border-gray-100">
                 <input type="text" id="searchInput" placeholder="Cerca fragranza o codice..." 
                        class="w-full p-4 bg-[#fdfdfd] border border-gray-200 outline-none focus:border-tortora text-xs tracking-widest uppercase mb-4">
                 
                 <div id="formatFilters" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                    <button onclick="setFilter('format', 'all', this)" class="format-btn filter-active border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white">Tutti Formati</button>
+                    <button onclick="setFilter('format', 'all', this)" class="format-btn filter-active border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">Tutti Formati</button>
                     <button onclick="setFilter('format', '15ml', this)" class="format-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">15ml</button>
                     <button onclick="setFilter('format', '30ml', this)" class="format-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">30ml</button>
                     <button onclick="setFilter('format', '70ml', this)" class="format-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">70ml</button>
@@ -63,19 +62,15 @@
             <div class="bg-white p-6 shadow-2xl sticky lg:top-24 border border-gray-100">
                 <h2 class="text-xs font-bold uppercase tracking-widest mb-4 border-b pb-4 text-gray-400">Il Tuo Carrello</h2>
                 <div id="cartList" class="space-y-3 mb-6"></div>
-                
                 <div id="promoBox" class="hidden bg-[#f4f1ee] p-4 mb-6 border border-[#d1c7bc]">
                     <p id="promoText" class="text-[10px] font-bold text-[#8d8478] uppercase text-center"></p>
                     <button id="freebieBtn" onclick="startFreebieSelection()" class="w-full bg-[#8d8478] text-white py-3 mt-3 text-[10px] font-black uppercase hidden">SCEGLI OMAGGIO +</button>
                 </div>
-
                 <div class="border-t pt-4 text-center space-y-1">
                     <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Totale Ordine</span>
                     <div class="choganTotalDisplay text-4xl font-light text-antracite">0.00 €</div>
                     <p class="marketTotalDisplay text-[10px] text-gray-400 line-through uppercase font-bold">In negozio: 0.00 €</p>
-                    <div class="bg-green-50 py-2 px-4 rounded-lg mt-2 font-black text-green-700 text-[11px] uppercase">
-                        Risparmio Totale: <span class="savingsDisplay">0.00 €</span>
-                    </div>
+                    <div class="bg-green-50 py-2 px-4 rounded-lg mt-2 font-black text-green-700 text-[11px] uppercase">Risparmio: <span class="savingsDisplay">0.00 €</span></div>
                     <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 mt-4 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
                 </div>
             </div>
@@ -96,19 +91,12 @@
     </div>
 
     <div class="lg:hidden fixed bottom-0 left-0 right-0 z-[95]">
-        <div id="autoPromoMsg" class="hidden bg-[#bdae9b] text-[#333333] text-center py-3 px-4 text-[9px] font-bold uppercase tracking-tight border-t border-white shadow-lg">
-            <span id="autoPromoText"></span>
-        </div>
+        <div id="autoPromoMsg" class="hidden bg-[#bdae9b] text-[#333333] text-center py-3 px-4 text-[9px] font-bold uppercase border-t border-white shadow-lg"><span id="autoPromoText"></span></div>
         <div class="bg-[#333333] text-white p-4 flex justify-between items-center shadow-lg">
-            <div onclick="toggleMobileCart()" class="flex flex-col">
-                <span class="text-[9px] uppercase tracking-widest text-[#bdae9b]">Totale</span>
-                <span class="choganTotalDisplay text-xl font-light">0.00 €</span>
-            </div>
+            <div onclick="toggleMobileCart()"><span class="text-[9px] uppercase tracking-widest text-[#bdae9b]">Totale</span><span class="choganTotalDisplay text-xl font-light">0.00 €</span></div>
             <div class="flex items-center gap-2">
                 <button id="quickFreebieBtn" onclick="startFreebieSelection()" class="hidden bg-[#bdae9b] text-[#333333] h-12 px-4 rounded font-black text-[10px] uppercase animate-gold">Regalo +</button>
-                <button onclick="toggleMobileCart()" class="bg-white/10 h-12 px-3 rounded text-[9px] uppercase font-bold relative">
-                    Carrello <span id="cartBadge" class="ml-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full inline-flex items-center justify-center">0</span>
-                </button>
+                <button onclick="toggleMobileCart()" class="bg-white/10 h-12 px-3 rounded text-[9px] uppercase font-bold relative">Carrello <span id="cartBadge" class="ml-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full inline-flex items-center justify-center">0</span></button>
             </div>
         </div>
     </div>
@@ -119,7 +107,7 @@
         let freebie = null;
         let currentFormat = 'all';
         let currentGender = 'all';
-        const WHATSAPP_NUMBER = "393275428780";
+        const WHATSAPP_NUMBER = "393278278502";
 
         async function loadAllData() {
             const files = [
@@ -133,32 +121,41 @@
                     const res = await fetch(f.name);
                     const data = await res.text();
                     parseCSV(data, f.gender);
-                } catch (e) { console.error("Errore:", f.name); }
+                } catch (e) { console.error("Errore caricamento file:", f.name); }
             }
             applyFilters();
         }
 
-        function parseCSV(data, fileGender) {
+        function parseCSV(data, baseGender) {
             const rows = data.split('\n').slice(1);
             rows.forEach(row => {
                 const col = row.split(';');
                 if (col.length < 5) return;
                 const nome = col[0].trim(), isp = col[1].trim();
-                let itemGender = fileGender === 'luxury' ? col[col.length-1].trim().toLowerCase() : fileGender;
+                
+                // Determina il genere
+                let finalGender = baseGender;
+                if (baseGender === 'luxury') {
+                    const genderCol = col[col.length - 1].trim().toLowerCase();
+                    finalGender = genderCol.includes('uomo') ? 'uomo' : genderCol.includes('donna') ? 'donna' : 'unisex';
+                }
 
                 const add = (cod, pr, mk, form) => {
-                    if (cod && pr) allItems.push({ 
-                        cod: cod.trim(), nome, isp, formato: form, 
-                        prezzo: parseFloat(pr), mkt: parseFloat(mk || 0), 
-                        genere: itemGender 
-                    });
+                    if (cod && pr && cod.trim() !== "") {
+                        allItems.push({
+                            cod: cod.trim(), nome, isp, formato: form,
+                            prezzo: parseFloat(pr.replace('€', '').trim()),
+                            mkt: parseFloat((mk || "0").toString().replace('€', '').trim()) || (form.includes('70ml') ? 145 : form.includes('30ml') ? 80 : 35),
+                            genere: finalGender
+                        });
+                    }
                 };
 
-                add(col[3], col[4], col[5] || 35, fileGender === 'luxury' ? "15ml Luxury" : "15ml");
-                if (fileGender === 'luxury') add(col[6], col[7], col[8] || 310, "50ml Luxury");
+                add(col[3], col[4], col[5], baseGender === 'luxury' ? "15ml Luxury" : "15ml");
+                if (baseGender === 'luxury') add(col[6], col[7], col[8], "50ml Luxury");
                 else {
-                    add(col[6], col[7], col[8] || 80, "30ml");
-                    add(col[9], col[10], col[11] || 145, "70ml");
+                    add(col[6], col[7], col[8], "30ml");
+                    add(col[9], col[10], col[11], "70ml");
                 }
             });
         }
@@ -178,7 +175,7 @@
                             <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded uppercase">${p.genere}</span>
                         </div>
                         <h3 class="font-bold text-xs uppercase tracking-widest mt-1">${p.nome}</h3>
-                        <p class="text-[9px] text-gray-400 uppercase italic tracking-wider">${p.isp}</p>
+                        <p class="text-[9px] text-gray-400 uppercase italic tracking-wider line-clamp-1">${p.isp}</p>
                         <p class="mt-1 font-light text-antracite text-lg">${p.prezzo.toFixed(2)} €</p>
                     </div>
                     <button onclick="addToCart('${p.cod}')" class="bg-gray-50 w-12 h-12 rounded-full text-2xl shadow-sm active:bg-tortora active:text-white transition-all">+</button>
@@ -220,7 +217,7 @@
                         <p class="text-gray-400 text-[8px] uppercase">${p.formato} - ${p.genere}</p>
                         <div class="flex gap-2 mt-1">
                             <span class="font-bold text-antracite">${p.prezzo.toFixed(2)}€</span>
-                            <span class="text-gray-300 line-through">${p.mkt.toFixed(2)}€</span>
+                            <span class="text-gray-300 line-through text-[9px]">${p.mkt.toFixed(2)}€</span>
                         </div>
                     </div>
                     <button onclick="removeFromCart(${i})" class="btn-remove">✕</button>
@@ -259,9 +256,10 @@
 
         function sendToWhatsApp() {
             if (!cart.length) return alert("Carrello vuoto!");
+            if ((cart.filter(p => p.formato === '70ml').length >= 2 || cart.filter(p => p.formato.includes('50ml')).length >= 2) && !freebie) return alert("Scegli l'omaggio!");
             let msg = `*ORDINE LUXURY ESSENCES*\n\n`;
             cart.forEach(p => msg += `• ${p.cod} | ${p.nome} (${p.formato}) - ${p.prezzo.toFixed(2)}€\n`);
-            if(freebie) msg += `\n🎁 *OMAGGIO:* ${freebie.cod} | ${freebie.nome}\n`;
+            if(freebie) msg += `\n🎁 *OMAGGIO:* ${freebie.cod} | ${freebie.nome} (30ml)\n`;
             msg += `\n*TOTALE: ${document.querySelector('.choganTotalDisplay').innerText}*`;
             msg += `\n💰 *RISPARMIO: ${document.querySelector('.savingsDisplay').innerText}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
