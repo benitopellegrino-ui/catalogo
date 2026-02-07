@@ -8,33 +8,20 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         :root { --tortora: #8d8478; --tortora-light: #bdae9b; --antracite: #333333; }
-        
         #mobileCartPanel { transition: transform 0.3s ease-in-out; transform: translateY(100%); }
         #mobileCartPanel.open { transform: translateY(0); }
-        
         .choosing-freebie-mode { border: 6px solid #bdae9b !important; }
         .cart-item { border-left: 4px solid var(--tortora); }
-        
         .filter-active { background-color: var(--antracite) !important; color: var(--tortora-light) !important; border-color: var(--antracite) !important; }
-
         @keyframes pulse-gold {
             0% { box-shadow: 0 0 0 0 rgba(189, 174, 155, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(189, 174, 155, 0); }
             100% { box-shadow: 0 0 0 0 rgba(189, 174, 155, 0); }
         }
         .animate-gold { animation: pulse-gold 2s infinite; }
-
         .btn-remove {
-            width: 38px; height: 38px;
-            display: flex; align-items: center; justify-content: center;
-            background-color: #fee2e2; color: #ef4444;
-            border-radius: 50%; font-size: 18px; font-weight: bold;
-            transition: all 0.2s; flex-shrink: 0;
-        }
-        .btn-remove:active { background-color: #ef4444; color: white; transform: scale(0.9); }
-
-        @media (min-width: 1024px) {
-            .cart-container { max-height: calc(100vh - 120px); overflow-y: auto; }
+            width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+            background-color: #fee2e2; color: #ef4444; border-radius: 50%; font-size: 18px; font-weight: bold;
         }
     </style>
 </head>
@@ -48,18 +35,24 @@
     </header>
 
     <div class="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-6 p-4">
-        
         <div class="lg:w-2/3">
             <div class="bg-white p-5 shadow-sm mb-6 sticky top-24 z-40 border border-gray-100">
                 <input type="text" id="searchInput" placeholder="Cerca fragranza o codice..." 
-                       class="w-full p-4 bg-[#fdfdfd] border border-gray-200 outline-none focus:border-tortora text-xs tracking-widest uppercase">
+                       class="w-full p-4 bg-[#fdfdfd] border border-gray-200 outline-none focus:border-tortora text-xs tracking-widest uppercase mb-4">
                 
-                <div id="filterBar" class="flex gap-2 overflow-x-auto py-4 no-scrollbar">
-                    <button onclick="filterBy('all', this)" class="filter-btn filter-active border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white transition-all">Tutti</button>
-                    <button onclick="filterBy('15ml', this)" class="filter-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white transition-all">15ml</button>
-                    <button onclick="filterBy('30ml', this)" class="filter-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white transition-all">30ml</button>
-                    <button onclick="filterBy('70ml', this)" class="filter-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white transition-all">70ml</button>
-                    <button onclick="filterBy('50ml', this)" class="filter-btn border border-amber-600 text-amber-700 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white transition-all">50ml Luxury</button>
+                <div id="formatFilters" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                    <button onclick="setFilter('format', 'all', this)" class="format-btn filter-active border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white">Tutti Formati</button>
+                    <button onclick="setFilter('format', '15ml', this)" class="format-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">15ml</button>
+                    <button onclick="setFilter('format', '30ml', this)" class="format-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">30ml</button>
+                    <button onclick="setFilter('format', '70ml', this)" class="format-btn border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">70ml</button>
+                    <button onclick="setFilter('format', '50ml', this)" class="format-btn border border-amber-600 text-amber-700 px-4 py-2 text-[9px] font-bold uppercase bg-white">50ml Luxury</button>
+                </div>
+
+                <div id="genderFilters" class="flex gap-2 overflow-x-auto py-2 no-scrollbar border-t border-gray-50 mt-2">
+                    <button onclick="setFilter('gender', 'all', this)" class="gender-btn filter-active border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase bg-white">Tutti Generi</button>
+                    <button onclick="setFilter('gender', 'uomo', this)" class="gender-btn border border-blue-100 px-4 py-2 text-[9px] font-bold uppercase text-blue-600">Uomo</button>
+                    <button onclick="setFilter('gender', 'donna', this)" class="gender-btn border border-pink-100 px-4 py-2 text-[9px] font-bold uppercase text-pink-600">Donna</button>
+                    <button onclick="setFilter('gender', 'unisex', this)" class="gender-btn border border-gray-100 px-4 py-2 text-[9px] font-bold uppercase text-gray-500">Unisex</button>
                 </div>
             </div>
             <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -69,55 +62,43 @@
             <div class="bg-white p-6 shadow-2xl sticky lg:top-24 border border-gray-100 cart-container">
                 <h2 class="text-xs font-bold uppercase tracking-widest mb-4 border-b pb-4 text-gray-400">Il Tuo Carrello</h2>
                 <div id="cartList" class="space-y-3 mb-6"></div>
-                
                 <div id="promoBox" class="hidden bg-[#f4f1ee] p-4 mb-6 border border-[#d1c7bc]">
                     <p id="promoText" class="text-[10px] font-bold text-[#8d8478] uppercase text-center"></p>
-                    <div id="freebieBtn" class="mt-3 hidden">
-                        <button onclick="startFreebieSelection()" class="w-full bg-[#8d8478] text-white py-3 text-[10px] font-black uppercase tracking-widest">SCEGLI OMAGGIO +</button>
-                    </div>
+                    <button id="freebieBtn" onclick="startFreebieSelection()" class="w-full bg-[#8d8478] text-white py-3 mt-3 text-[10px] font-black uppercase hidden">SCEGLI OMAGGIO +</button>
                 </div>
-
-                <div class="border-t pt-4 mb-6 text-center space-y-1">
+                <div class="border-t pt-4 text-center space-y-1">
                     <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Totale Ordine</span>
                     <div class="choganTotalDisplay text-4xl font-light text-antracite">0.00 €</div>
-                    <p class="marketTotalDisplay text-[10px] text-gray-400 line-through uppercase">In negozio: 0.00 €</p>
-                    <div class="bg-green-50 py-2 px-4 rounded-lg mt-2">
-                        <p class="text-[11px] text-green-700 font-black uppercase tracking-tighter">Risparmio Totale: <span class="savingsDisplay">0.00 €</span></p>
-                    </div>
+                    <div class="bg-green-50 py-2 px-4 rounded-lg mt-2 font-black text-green-700 text-[11px] uppercase">Risparmio: <span class="savingsDisplay">0.00 €</span></div>
+                    <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 mt-4 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA WHATSAPP</button>
                 </div>
-                <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] tracking-[0.2em] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
             </div>
         </div>
     </div>
 
     <div id="mobileCartPanel" class="lg:hidden fixed inset-0 bg-white z-[100] p-6 flex flex-col">
         <div class="flex justify-between items-center border-b pb-6 mb-4">
-            <h2 class="font-bold uppercase tracking-widest text-sm text-gray-500">Riepilogo Ordine</h2>
-            <button onclick="toggleMobileCart()" class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full text-xl">✕</button>
+            <h2 class="font-bold uppercase text-sm text-gray-500">Riepilogo Ordine</h2>
+            <button onclick="toggleMobileCart()" class="text-xl">✕</button>
         </div>
         <div id="cartListMobile" class="flex-1 overflow-y-auto space-y-4"></div>
-        <div class="border-t pt-4 mt-4 space-y-2 text-center">
-            <div class="marketTotalDisplay text-[10px] text-gray-400 line-through uppercase">In negozio: 0.00 €</div>
-            <div class="text-green-600 text-xs font-bold uppercase">Risparmio: <span class="savingsDisplay">0.00 €</span></div>
-            <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
-        </div>
+        <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase mt-4">INVIA WHATSAPP</button>
     </div>
 
     <div class="lg:hidden fixed bottom-0 left-0 right-0 z-[95]">
-        <div id="autoPromoMsg" class="hidden bg-[#bdae9b] text-[#333333] text-center py-3 px-4 text-[9px] font-bold uppercase tracking-tight border-t border-white shadow-lg leading-tight">
+        <div id="autoPromoMsg" class="hidden bg-[#bdae9b] text-[#333333] text-center py-3 text-[9px] font-bold uppercase tracking-tight border-t border-white shadow-lg">
             <span id="autoPromoText"></span>
         </div>
-        <div class="bg-[#333333] text-white p-4 flex justify-between items-center shadow-[0_-5px_20px_rgba(0,0,0,0.3)]">
-            <div onclick="toggleMobileCart()" class="flex flex-col">
+        <div class="bg-[#333333] text-white p-4 flex justify-between items-center shadow-lg">
+            <div onclick="toggleMobileCart()">
                 <span class="text-[9px] uppercase tracking-widest text-[#bdae9b]">Totale</span>
                 <span class="choganTotalDisplay text-xl font-light">0.00 €</span>
             </div>
             <div class="flex items-center gap-2">
                 <button id="quickFreebieBtn" onclick="startFreebieSelection()" class="hidden bg-[#bdae9b] text-[#333333] h-12 px-4 rounded font-black text-[10px] uppercase animate-gold">Regalo +</button>
-                <button onclick="toggleMobileCart()" class="bg-white/10 h-12 px-3 rounded text-[9px] uppercase font-bold relative flex items-center">
-                    Carrello <span id="cartBadge" class="ml-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full flex items-center justify-center text-[10px]">0</span>
+                <button onclick="toggleMobileCart()" class="bg-white/10 h-12 px-3 rounded text-[9px] uppercase font-bold relative">
+                    Carrello <span id="cartBadge" class="ml-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full inline-flex items-center justify-center">0</span>
                 </button>
-                <button onclick="sendToWhatsApp()" class="bg-[#bdae9b] text-[#333333] h-12 px-4 rounded text-[10px] font-black uppercase">Invia</button>
             </div>
         </div>
     </div>
@@ -126,84 +107,92 @@
         let allItems = [];
         let cart = [];
         let freebie = null;
-        const WHATSAPP_NUMBER = "393275428780"; 
+        let currentFormat = 'all';
+        let currentGender = 'all';
+        const WHATSAPP_NUMBER = "393275428780";
 
         async function loadAllData() {
-            const files = ['Profumi uomo-Tabella 1.csv', 'Profumi donna-Tabella 1.csv', 'Profumi Unisex-Tabella 1.csv', 'Profumi Luxury-Tabella 1.csv'];
-            for (const file of files) {
+            const files = [
+                { name: 'Profumi uomo-Tabella 1.csv', gender: 'uomo' },
+                { name: 'Profumi donna-Tabella 1.csv', gender: 'donna' },
+                { name: 'Profumi Unisex-Tabella 1.csv', gender: 'unisex' },
+                { name: 'Profumi Luxury-Tabella 1.csv', gender: 'luxury' }
+            ];
+            for (const f of files) {
                 try {
-                    const res = await fetch(file);
+                    const res = await fetch(f.name);
                     const data = await res.text();
-                    parseCSV(data, file.includes('Luxury'));
-                } catch (e) { console.error("Errore caricamento:", file); }
+                    parseCSV(data, f.gender);
+                } catch (e) { console.error("Errore:", f.name); }
             }
-            displayProducts(allItems);
+            applyFilters();
         }
 
-        function parseCSV(data, isLuxury) {
+        function parseCSV(data, fileGender) {
             const rows = data.split('\n').slice(1);
             rows.forEach(row => {
                 const col = row.split(';');
                 if (col.length < 5) return;
                 const nome = col[0].trim(), isp = col[1].trim();
-
-                if (col[3] && col[4]) {
-                    allItems.push({
-                        cod: col[3].trim(), nome, isp, formato: isLuxury ? "15ml Luxury" : "15ml",
-                        prezzo: parseFloat(col[4]),
-                        mkt: parseFloat(col[5] || 35.00)
-                    });
+                
+                // Per il file luxury, prendiamo il genere dall'ultima colonna
+                let itemGender = fileGender;
+                if (fileGender === 'luxury') {
+                    itemGender = col[col.length-1].trim().toLowerCase();
                 }
 
-                if (isLuxury) {
-                    if (col[6] && col[7]) {
-                        allItems.push({
-                            cod: col[6].trim(), nome, isp, formato: "50ml Luxury",
-                            prezzo: parseFloat(col[7]),
-                            mkt: parseFloat(col[8] || 310.00)
-                        });
-                    }
-                } else {
-                    if (col[6] && col[7]) {
-                        allItems.push({
-                            cod: col[6].trim(), nome, isp, formato: "30ml",
-                            prezzo: parseFloat(col[7]),
-                            mkt: parseFloat(col[8] || 80.00)
-                        });
-                    }
-                    if (col[9] && col[10]) {
-                        allItems.push({
-                            cod: col[9].trim(), nome, isp, formato: "70ml",
-                            prezzo: parseFloat(col[10]),
-                            mkt: parseFloat(col[11] || 145.00)
-                        });
-                    }
+                const add = (cod, pr, mk, form) => {
+                    if (cod && pr) allItems.push({ cod: cod.trim(), nome, isp, formato: form, prezzo: parseFloat(pr), mkt: parseFloat(mk), genere: itemGender });
+                };
+
+                add(col[3], col[4], col[5] || 35, fileGender === 'luxury' ? "15ml Luxury" : "15ml");
+                if (fileGender === 'luxury') add(col[6], col[7], col[8] || 310, "50ml Luxury");
+                else {
+                    add(col[6], col[7], col[8] || 80, "30ml");
+                    add(col[9], col[10], col[11] || 145, "70ml");
                 }
             });
         }
 
-        function displayProducts(list) {
+        function setFilter(type, value, btn) {
+            if (type === 'format') {
+                currentFormat = value;
+                document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('filter-active'));
+            } else {
+                currentGender = value;
+                document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('filter-active'));
+            }
+            btn.classList.add('filter-active');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allItems;
+
+            if (currentFormat !== 'all') filtered = filtered.filter(p => p.formato.toLowerCase().includes(currentFormat));
+            if (currentGender !== 'all') filtered = filtered.filter(p => p.genere === currentGender);
+            if (search) filtered = filtered.filter(p => p.nome.toLowerCase().includes(search) || p.isp.toLowerCase().includes(search) || p.cod.toLowerCase().includes(search));
+
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = list.map(p => `
+            grid.innerHTML = filtered.map(p => {
+                const colors = { uomo: 'text-blue-600 bg-blue-50', donna: 'text-pink-600 bg-pink-50', unisex: 'text-gray-500 bg-gray-50' };
+                const colorClass = colors[p.genere] || 'text-gray-400 bg-gray-50';
+                
+                return `
                 <div class="bg-white p-5 border border-gray-100 flex justify-between items-center shadow-sm">
                     <div class="flex-1">
-                        <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-tortora border border-gray-200 uppercase">${p.formato}</span>
+                        <div class="flex gap-2">
+                            <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-100 text-tortora rounded uppercase">${p.formato}</span>
+                            <span class="text-[8px] font-bold px-2 py-0.5 ${colorClass} rounded uppercase">${p.genere}</span>
+                        </div>
                         <h3 class="font-bold text-xs uppercase tracking-widest mt-1">${p.nome}</h3>
                         <p class="text-[9px] text-gray-400 uppercase italic tracking-wider">${p.isp}</p>
                         <p class="mt-1 font-light text-antracite text-lg">${p.prezzo.toFixed(2)} €</p>
                     </div>
                     <button onclick="addToCart('${p.cod}')" class="bg-gray-50 w-12 h-12 rounded-full text-2xl shadow-sm active:bg-tortora active:text-white transition-all">+</button>
-                </div>
-            `).join('');
-        }
-
-        function toggleMobileCart() { document.getElementById('mobileCartPanel').classList.toggle('open'); }
-
-        function filterBy(f, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-active'));
-            if (btn) btn.classList.add('filter-active');
-            if (f === 'all') displayProducts(allItems);
-            else displayProducts(allItems.filter(p => p.formato.toLowerCase().includes(f.toLowerCase())));
+                </div>`;
+            }).join('');
         }
 
         function addToCart(codice) {
@@ -214,8 +203,7 @@
                     document.body.classList.remove('choosing-freebie-mode');
                     document.getElementById('selectionBanner').classList.add('hidden');
                     updateUI();
-                    filterBy('all', document.querySelector('[onclick*="all"]'));
-                } else { alert("Per l'omaggio scegli un formato da 30ml!"); }
+                } else alert("Scegli un 30ml!");
                 return;
             }
             cart.push(item);
@@ -223,125 +211,60 @@
         }
 
         function updateUI() {
-            const renderCart = (p, i) => `
-                <div class="cart-item flex justify-between items-center bg-white p-3 shadow-sm border border-gray-50 mb-2">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold uppercase leading-tight">${p.nome}</span>
-                        <span class="text-[9px] text-gray-400 uppercase">${p.formato} - ${p.cod}</span>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-[10px] font-bold text-antracite">${p.prezzo.toFixed(2)}€</span>
-                            <span class="text-[9px] text-gray-300 line-through">${p.mkt.toFixed(2)}€</span>
-                        </div>
+            const render = (p, i) => `
+                <div class="cart-item bg-white p-3 border mb-2 flex justify-between items-center rounded-lg">
+                    <div class="text-[10px]">
+                        <p class="font-bold uppercase">${p.nome}</p>
+                        <p class="text-gray-400 uppercase">${p.formato} - ${p.genere}</p>
+                        <p class="font-bold">${p.prezzo.toFixed(2)}€</p>
                     </div>
                     <button onclick="removeFromCart(${i})" class="btn-remove">✕</button>
                 </div>`;
-
-            const listContent = cart.length === 0 ? '<p class="text-center py-10 text-gray-400 uppercase text-[10px]">Il carrello è vuoto</p>' : cart.map(renderCart).join('');
-            document.getElementById('cartList').innerHTML = listContent;
-            document.getElementById('cartListMobile').innerHTML = listContent;
-            document.getElementById('cartBadge').innerText = cart.length;
-
-            if (freebie) {
-                const fHTML = `
-                    <div class="bg-[#fdfaf5] p-3 border border-[#e8dfd5] flex justify-between items-center mt-2">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-bold text-tortora uppercase">🎁 OMAGGIO: ${freebie.nome}</span>
-                            <span class="text-[9px] text-gray-400 uppercase">30ml - Valore: ${freebie.mkt.toFixed(2)}€</span>
-                        </div>
-                        <button onclick="removeFreebie()" class="btn-remove">✕</button>
-                    </div>`;
-                document.getElementById('cartList').innerHTML += fHTML;
-                document.getElementById('cartListMobile').innerHTML += fHTML;
-            }
-
+            
+            const content = cart.map(render).join('') + (freebie ? `<div class="bg-amber-50 p-3 border border-amber-200 rounded-lg text-[10px] flex justify-between items-center mt-2"><span>🎁 <b>OMAGGIO:</b> ${freebie.nome} (30ml)</span><button onclick="removeFreebie()" class="text-red-500 font-bold">✕</button></div>` : '');
+            document.getElementById('cartList').innerHTML = cart.length ? content : '<p class="text-center py-10 text-gray-400 uppercase text-[10px]">Il carrello è vuoto</p>';
+            document.getElementById('cartListMobile').innerHTML = document.getElementById('cartList').innerHTML;
+            
             const count70 = cart.filter(p => p.formato === '70ml').length;
             const count50 = cart.filter(p => p.formato.includes('50ml')).length;
             const promoActive = (count70 >= 2 || count50 >= 2);
-            
-            const autoMsg = document.getElementById('autoPromoMsg'); // Smartphone
-            const autoText = document.getElementById('autoPromoText'); // Smartphone
-            const promoBox = document.getElementById('promoBox'); // PC
-            const promoText = document.getElementById('promoText'); // PC
-            const quickBtn = document.getElementById('quickFreebieBtn');
-            const freebieBtn = document.getElementById('freebieBtn');
+            const msg = promoActive ? "✨ PROMO ATTIVA: OMAGGIO SBLOCCATO!" : (count70 === 1 || count50 === 1 ? "💡 Aggiungi un altro da 70ml o 50ml per l'Omaggio 30ml!" : "");
 
-            if (promoActive) {
-                const msgSbloccato = "✨ PROMO ATTIVA: OMAGGIO SBLOCCATO!";
-                autoMsg.classList.remove('hidden');
-                autoText.innerText = msgSbloccato;
-                quickBtn.classList.toggle('hidden', !!freebie);
-                promoBox.classList.remove('hidden');
-                promoText.innerText = msgSbloccato;
-                freebieBtn.classList.toggle('hidden', !!freebie);
-
-            } else if (count70 === 1 || count50 === 1) {
-                const msgQuasi = "💡 Aggiungi un altro da 70ml o 50ml per l'Omaggio 30ml!";
-                autoMsg.classList.remove('hidden');
-                autoText.innerText = msgQuasi;
-                quickBtn.classList.add('hidden');
-                promoBox.classList.remove('hidden');
-                promoText.innerText = msgQuasi;
-                freebieBtn.classList.add('hidden');
-
-            } else {
-                autoMsg.classList.add('hidden');
-                quickBtn.classList.add('hidden');
-                promoBox.classList.add('hidden');
-            }
+            document.getElementById('autoPromoMsg').className = msg ? 'lg:hidden fixed bottom-20 left-0 right-0 z-[95] bg-[#bdae9b] text-[#333333] text-center py-3 px-4 text-[9px] font-bold uppercase border-t border-white' : 'hidden';
+            document.getElementById('autoPromoText').innerText = msg;
+            document.getElementById('promoBox').classList.toggle('hidden', !msg);
+            document.getElementById('promoText').innerText = msg;
+            document.getElementById('freebieBtn').classList.toggle('hidden', !promoActive || !!freebie);
+            document.getElementById('quickFreebieBtn').classList.toggle('hidden', !promoActive || !!freebie);
 
             const total = cart.reduce((s, p) => s + p.prezzo, 0);
             const totalMkt = cart.reduce((s, p) => s + p.mkt, 0) + (freebie ? freebie.mkt : 0);
-            const savings = totalMkt - total;
-
-            document.querySelectorAll('.choganTotalDisplay').forEach(el => el.innerText = `${total.toFixed(2)} €`);
-            document.querySelectorAll('.marketTotalDisplay').forEach(el => el.innerText = `In negozio: ${totalMkt.toFixed(2)} €`);
-            document.querySelectorAll('.savingsDisplay').forEach(el => el.innerText = `${savings.toFixed(2)} €`);
+            document.querySelectorAll('.choganTotalDisplay').forEach(el => el.innerText = total.toFixed(2) + " €");
+            document.querySelectorAll('.savingsDisplay').forEach(el => el.innerText = (totalMkt - total).toFixed(2) + " €");
+            document.getElementById('cartBadge').innerText = cart.length;
         }
 
-        function removeFromCart(i) {
-            cart.splice(i, 1);
-            checkFreebieEligibility();
-            updateUI();
-        }
-
-        function removeFreebie() {
-            freebie = null;
-            updateUI();
-        }
-
-        function checkFreebieEligibility() {
-            const count70 = cart.filter(p => p.formato === '70ml').length;
-            const count50 = cart.filter(p => p.formato.includes('50ml')).length;
-            if (count70 < 2 && count50 < 2) freebie = null;
-        }
-
-        function startFreebieSelection() {
+        function removeFromCart(i) { cart.splice(i, 1); if(cart.filter(p => p.formato === '70ml' || p.formato.includes('50ml')).length < 2) freebie = null; updateUI(); }
+        function removeFreebie() { freebie = null; updateUI(); }
+        function toggleMobileCart() { document.getElementById('mobileCartPanel').classList.toggle('open'); }
+        function startFreebieSelection() { 
             document.body.classList.add('choosing-freebie-mode');
             document.getElementById('selectionBanner').classList.remove('hidden');
             if(document.getElementById('mobileCartPanel').classList.contains('open')) toggleMobileCart();
-            filterBy('30ml', document.querySelector('[onclick*="30ml"]'));
+            setFilter('format', '30ml', document.querySelector('[onclick*="30ml"]'));
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const t = e.target.value.toLowerCase();
-            displayProducts(allItems.filter(p => p.nome.toLowerCase().includes(t) || p.isp.toLowerCase().includes(t) || p.cod.toLowerCase().includes(t)));
-        });
-
         function sendToWhatsApp() {
-            if (cart.length === 0) return alert("Il carrello è vuoto!");
-            const count70 = cart.filter(p => p.formato === '70ml').length;
-            const count50 = cart.filter(p => p.formato.includes('50ml')).length;
-            if ((count70 >= 2 || count50 >= 2) && !freebie) return alert("Seleziona il tuo omaggio da 30ml!");
-            
+            if (!cart.length) return alert("Carrello vuoto!");
             let msg = `*ORDINE LUXURY ESSENCES*\n\n`;
             cart.forEach(p => msg += `• ${p.cod} | ${p.nome} (${p.formato}) - ${p.prezzo.toFixed(2)}€\n`);
-            if (freebie) msg += `\n🎁 *OMAGGIO:* ${freebie.cod} | ${freebie.nome}\n`;
+            if(freebie) msg += `\n🎁 *OMAGGIO:* ${freebie.nome} (30ml)\n`;
             msg += `\n*TOTALE: ${document.querySelector('.choganTotalDisplay').innerText}*`;
-            msg += `\n💰 *RISPARMIO: ${document.querySelector('.savingsDisplay').innerText}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
         loadAllData();
     </script>
 </body>
