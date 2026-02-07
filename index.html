@@ -15,7 +15,7 @@
         .choosing-freebie-mode { border: 6px solid #bdae9b !important; }
         .cart-item { border-left: 4px solid var(--tortora); }
         
-        /* Stile per filtro attivo */
+        /* Filtro attivo */
         .filter-active { background-color: var(--antracite) !important; color: var(--tortora-light) !important; border-color: var(--antracite) !important; }
 
         @keyframes pulse-gold {
@@ -27,18 +27,11 @@
 
         /* Pulsante Rimuovi Ottimizzato */
         .btn-remove {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #fee2e2;
-            color: #ef4444;
-            border-radius: 50%;
-            font-size: 18px;
-            font-weight: bold;
-            transition: all 0.2s;
-            flex-shrink: 0;
+            width: 38px; height: 38px;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #fee2e2; color: #ef4444;
+            border-radius: 50%; font-size: 18px; font-weight: bold;
+            transition: all 0.2s; flex-shrink: 0;
         }
         .btn-remove:active { background-color: #ef4444; color: white; transform: scale(0.9); }
 
@@ -47,7 +40,7 @@
         }
     </style>
 </head>
-<body class="bg-[#f8f7f5] text-[#333333] font-sans pb-32 lg:pb-0">
+<body class="bg-[#f8f7f5] text-[#333333] font-sans pb-40 lg:pb-0">
 
     <header class="bg-[#333333] text-[#f4f4f2] p-6 shadow-xl text-center sticky top-0 z-50">
         <h1 class="text-2xl font-light uppercase tracking-[0.3em]">Luxury Essences</h1>
@@ -71,7 +64,6 @@
                     <button onclick="filterBy('50ml', this)" class="filter-btn border border-amber-600 text-amber-700 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter bg-white transition-all">50ml Luxury</button>
                 </div>
             </div>
-
             <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
@@ -87,10 +79,13 @@
                     </div>
                 </div>
 
-                <div class="border-t pt-4 mb-6 text-center">
-                    <span class="text-[10px] uppercase text-gray-400 font-bold">Totale Ordine:</span>
-                    <div class="choganTotalDisplay text-3xl font-light text-antracite">0.00 €</div>
-                    <p class="text-[11px] text-green-600 font-bold uppercase mt-2 italic">Risparmio stimato: <span class="savingsDisplay">0.00 €</span></p>
+                <div class="border-t pt-4 mb-6 text-center space-y-1">
+                    <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Totale Ordine</span>
+                    <div class="choganTotalDisplay text-4xl font-light text-antracite">0.00 €</div>
+                    <p class="marketTotalDisplay text-[10px] text-gray-400 line-through uppercase">In negozio: 0.00 €</p>
+                    <div class="bg-green-50 py-2 px-4 rounded-lg mt-2">
+                        <p class="text-[11px] text-green-700 font-black uppercase tracking-tighter">Risparmio Totale: <span class="savingsDisplay">0.00 €</span></p>
+                    </div>
                 </div>
                 <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] tracking-[0.2em] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
             </div>
@@ -99,11 +94,13 @@
 
     <div id="mobileCartPanel" class="lg:hidden fixed inset-0 bg-white z-[100] p-6 flex flex-col">
         <div class="flex justify-between items-center border-b pb-6 mb-4">
-            <h2 class="font-bold uppercase tracking-widest text-sm text-gray-500">Il Tuo Carrello</h2>
-            <button onclick="toggleMobileCart()" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full text-xl">✕</button>
+            <h2 class="font-bold uppercase tracking-widest text-sm text-gray-500">Riepilogo Ordine</h2>
+            <button onclick="toggleMobileCart()" class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full text-xl">✕</button>
         </div>
         <div id="cartListMobile" class="flex-1 overflow-y-auto space-y-4"></div>
-        <div class="border-t pt-4 mt-4">
+        <div class="border-t pt-4 mt-4 space-y-2 text-center">
+            <div class="marketTotalDisplay text-[10px] text-gray-400 line-through uppercase">In negozio: 0.00 €</div>
+            <div class="text-green-600 text-xs font-bold uppercase">Risparmio: <span class="savingsDisplay">0.00 €</span></div>
             <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
         </div>
     </div>
@@ -112,17 +109,13 @@
         <div id="autoPromoMsg" class="hidden bg-[#bdae9b] text-[#333333] text-center py-3 px-4 text-[9px] font-bold uppercase tracking-tight border-t border-white shadow-lg leading-tight">
             <span id="autoPromoText"></span>
         </div>
-        
         <div class="bg-[#333333] text-white p-4 flex justify-between items-center shadow-[0_-5px_20px_rgba(0,0,0,0.3)]">
             <div onclick="toggleMobileCart()" class="flex flex-col">
                 <span class="text-[9px] uppercase tracking-widest text-[#bdae9b]">Totale</span>
                 <span class="choganTotalDisplay text-xl font-light">0.00 €</span>
             </div>
-            
             <div class="flex items-center gap-2">
-                <button id="quickFreebieBtn" onclick="startFreebieSelection()" class="hidden bg-[#bdae9b] text-[#333333] h-12 px-4 rounded font-black text-[10px] uppercase animate-gold">
-                    Scegli Regalo +
-                </button>
+                <button id="quickFreebieBtn" onclick="startFreebieSelection()" class="hidden bg-[#bdae9b] text-[#333333] h-12 px-4 rounded font-black text-[10px] uppercase animate-gold">Scegli Regalo +</button>
                 <button onclick="toggleMobileCart()" class="bg-white/10 h-12 px-3 rounded text-[9px] uppercase font-bold relative flex items-center">
                     Carrello <span id="cartBadge" class="ml-2 bg-[#bdae9b] text-[#333333] w-5 h-5 rounded-full flex items-center justify-center text-[10px]">0</span>
                 </button>
@@ -135,7 +128,7 @@
         let allItems = [];
         let cart = [];
         let freebie = null;
-        const WHATSAPP_NUMBER = "393275428780"; 
+        const WHATSAPP_NUMBER = "393278278502"; 
 
         async function loadAllData() {
             const files = ['Profumi uomo-Tabella 1.csv', 'Profumi donna-Tabella 1.csv', 'Profumi Unisex-Tabella 1.csv', 'Profumi Luxury-Tabella 1.csv'];
@@ -144,7 +137,7 @@
                     const res = await fetch(file);
                     const data = await res.text();
                     parseCSV(data, file.includes('Luxury'));
-                } catch (e) { console.error("Errore file:", file); }
+                } catch (e) { console.error("Errore caricamento:", file); }
             }
             displayProducts(allItems);
         }
@@ -155,12 +148,39 @@
                 const col = row.split(';');
                 if (col.length < 5) return;
                 const nome = col[0].trim(), isp = col[1].trim();
-                if (col[3] && col[4] && col[4].trim() !== "") allItems.push({ cod: col[3].trim(), nome, isp, formato: "15ml", prezzo: parseFloat(col[4].replace(',','.')) });
+
+                // 15ml (Standard o Luxury)
+                if (col[3] && col[4]) {
+                    allItems.push({
+                        cod: col[3].trim(), nome, isp, formato: isLuxury ? "15ml Luxury" : "15ml",
+                        prezzo: parseFloat(col[4]),
+                        mkt: parseFloat(col[5] || 35.00)
+                    });
+                }
+
                 if (isLuxury) {
-                    if (col[5] && col[6]) allItems.push({ cod: col[5].trim(), nome, isp, formato: "50ml Luxury", prezzo: parseFloat(col[6].replace(',','.')) });
+                    if (col[6] && col[7]) {
+                        allItems.push({
+                            cod: col[6].trim(), nome, isp, formato: "50ml Luxury",
+                            prezzo: parseFloat(col[7]),
+                            mkt: parseFloat(col[8] || 310.00)
+                        });
+                    }
                 } else {
-                    if (col[5] && col[6]) allItems.push({ cod: col[5].trim(), nome, isp, formato: "30ml", prezzo: parseFloat(col[6].replace(',','.')) });
-                    if (col[7] && col[8]) allItems.push({ cod: col[7].trim(), nome, isp, formato: "70ml", prezzo: parseFloat(col[8].replace(',','.')) });
+                    if (col[6] && col[7]) {
+                        allItems.push({
+                            cod: col[6].trim(), nome, isp, formato: "30ml",
+                            prezzo: parseFloat(col[7]),
+                            mkt: parseFloat(col[8] || 80.00)
+                        });
+                    }
+                    if (col[9] && col[10]) {
+                        allItems.push({
+                            cod: col[9].trim(), nome, isp, formato: "70ml",
+                            prezzo: parseFloat(col[10]),
+                            mkt: parseFloat(col[11] || 145.00)
+                        });
+                    }
                 }
             });
         }
@@ -211,9 +231,9 @@
                     <div class="flex flex-col">
                         <span class="text-[10px] font-bold uppercase leading-tight">${p.nome}</span>
                         <span class="text-[9px] text-gray-400 uppercase">${p.formato} - ${p.cod}</span>
-                        <span class="text-[10px] font-bold text-antracite mt-1">${p.prezzo.toFixed(2)}€</span>
+                        <span class="text-[10px] font-bold text-antracite mt-1">${p.prezzo.toFixed(2)}€ <span class="text-gray-300 font-normal line-through ml-2">${p.mkt.toFixed(2)}€</span></span>
                     </div>
-                    <button onclick="removeFromCart(${i})" class="btn-remove" title="Rimuovi">✕</button>
+                    <button onclick="removeFromCart(${i})" class="btn-remove">✕</button>
                 </div>`;
 
             const listContent = cart.length === 0 ? '<p class="text-center py-10 text-gray-400 uppercase text-[10px]">Il carrello è vuoto</p>' : cart.map(renderCart).join('');
@@ -226,7 +246,7 @@
                     <div class="bg-[#fdfaf5] p-3 border border-[#e8dfd5] flex justify-between items-center mt-2">
                         <div class="flex flex-col">
                             <span class="text-[10px] font-bold text-tortora uppercase">🎁 OMAGGIO: ${freebie.nome}</span>
-                            <span class="text-[9px] text-gray-400">30ml - GRATIS</span>
+                            <span class="text-[9px] text-gray-400">30ml - GRATIS (Valore: ${freebie.mkt.toFixed(2)}€)</span>
                         </div>
                         <button onclick="removeFreebie()" class="btn-remove">✕</button>
                     </div>`;
@@ -263,9 +283,12 @@
             }
 
             const total = cart.reduce((s, p) => s + p.prezzo, 0);
-            const retail = cart.reduce((s, p) => s + (p.formato.includes('50ml') ? 310 : 145), 0) + (freebie ? 80 : 0);
+            const totalMkt = cart.reduce((s, p) => s + p.mkt, 0) + (freebie ? freebie.mkt : 0);
+            const savings = totalMkt - total;
+
             document.querySelectorAll('.choganTotalDisplay').forEach(el => el.innerText = `${total.toFixed(2)} €`);
-            document.querySelectorAll('.savingsDisplay').forEach(el => el.innerText = `${ retail === 0 ? '0.00' : (retail - total).toFixed(2)} €`);
+            document.querySelectorAll('.marketTotalDisplay').forEach(el => el.innerText = `In negozio: ${totalMkt.toFixed(2)} €`);
+            document.querySelectorAll('.savingsDisplay').forEach(el => el.innerText = `${savings.toFixed(2)} €`);
         }
 
         function removeFromCart(i) {
@@ -308,6 +331,7 @@
             cart.forEach(p => msg += `• ${p.cod} | ${p.nome} (${p.formato}) - ${p.prezzo.toFixed(2)}€\n`);
             if (freebie) msg += `\n🎁 *OMAGGIO:* ${freebie.cod} | ${freebie.nome}\n`;
             msg += `\n*TOTALE: ${document.querySelector('.choganTotalDisplay').innerText}*`;
+            msg += `\n💰 *RISPARMIO: ${document.querySelector('.savingsDisplay').innerText}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
