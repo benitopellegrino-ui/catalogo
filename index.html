@@ -3,55 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalogo Fragranze Luxury</title>
+    <title>Luxury Essence Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        /* Palette Tortora e Grigio */
-        :root {
-            --tortora: #8d8478;
-            --grigio-chiaro: #f4f4f2;
-            --antracite: #333333;
-        }
+        :root { --tortora: #8d8478; --antracite: #333333; }
         .bg-tortora { background-color: var(--tortora); }
         .text-tortora { color: var(--tortora); }
         .border-tortora { border-color: var(--tortora); }
-        .choosing-freebie { border: 4px solid #10b981; position: relative; }
+        .choosing-freebie-mode { border: 6px solid #bdae9b !important; }
+        .cart-item { border-left: 3px solid var(--tortora); }
     </style>
 </head>
-<body class="bg-[#f4f4f2] text-[#333333] font-sans pb-40">
+<body class="bg-[#f8f7f5] text-[#333333] font-sans">
 
-    <header class="bg-[#333333] text-[#f4f4f2] p-8 shadow-2xl text-center">
-        <h1 class="text-3xl font-light uppercase tracking-[0.2em]">Luxury Essences</h1>
-        <p class="text-[10px] opacity-60 mt-2 tracking-widest uppercase text-white">Estratti di Profumo al 30%</p>
+    <header class="bg-[#333333] text-[#f4f4f2] p-6 shadow-xl text-center sticky top-0 z-50">
+        <h1 class="text-2xl font-light uppercase tracking-[0.3em]">Luxury Essences</h1>
+        <div id="selectionBanner" class="hidden bg-[#bdae9b] text-white text-[10px] py-2 mt-2 tracking-[0.2em] uppercase font-bold animate-bounce">
+            ✨ Seleziona ora il tuo omaggio da 30ml dalla lista ✨
+        </div>
     </header>
 
-    <div class="p-4 sticky top-0 bg-[#f4f4f2] shadow-md z-10">
-        <input type="text" id="searchInput" placeholder="Cerca fragranza o ispirazione..." 
-               class="w-full p-4 border border-gray-300 rounded-none focus:border-tortora outline-none transition-all shadow-sm bg-white uppercase text-xs tracking-widest">
+    <div class="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-6 p-4">
         
-        <div class="flex gap-2 overflow-x-auto py-3 no-scrollbar">
-            <button onclick="filterBy('all')" class="border border-tortora text-tortora px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-tortora hover:text-white transition">Tutti</button>
-            <button onclick="filterBy('15ml')" class="border border-gray-300 px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-white">15ml</button>
-            <button onclick="filterBy('30ml')" class="border border-gray-300 px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-white">30ml</button>
-            <button onclick="filterBy('70ml')" class="border border-gray-300 px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-white">70ml</button>
-            <button onclick="filterBy('50ml')" class="border border-yellow-600 text-yellow-700 px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-white">Luxury 50ml</button>
-        </div>
-    </div>
-
-    <main id="productGrid" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        </main>
-
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-6 shadow-2xl z-50">
-        <div id="canvassAlert" class="hidden mb-4 p-2 bg-tortora text-white text-[10px] font-bold tracking-widest uppercase text-center rounded"></div>
-        
-        <div class="flex justify-between items-center max-w-4xl mx-auto">
-            <div id="cartSummary">
-                <p id="cartTotal" class="font-light text-2xl tracking-tighter text-antracite uppercase">Seleziona Prodotti</p>
+        <div class="lg:w-2/3">
+            <div class="bg-white p-5 shadow-sm mb-6 sticky top-24 z-40 border border-gray-100">
+                <input type="text" id="searchInput" placeholder="CERCA FRAGRANZA, ISPIRAZIONE O CODICE..." 
+                       class="w-full p-4 bg-[#fdfdfd] border border-gray-200 outline-none focus:border-tortora text-xs tracking-widest uppercase">
+                
+                <div class="flex gap-2 overflow-x-auto py-4 no-scrollbar">
+                    <button onclick="filterBy('all')" class="border border-tortora text-tortora px-4 py-2 text-[9px] font-bold uppercase tracking-tighter hover:bg-tortora hover:text-white transition">Tutti</button>
+                    <button onclick="filterBy('15ml')" class="bg-white border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter">15ml</button>
+                    <button onclick="filterBy('30ml')" class="bg-white border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter">30ml</button>
+                    <button onclick="filterBy('70ml')" class="bg-white border border-gray-200 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter">70ml</button>
+                    <button onclick="filterBy('50ml')" class="border border-amber-600 text-amber-700 px-4 py-2 text-[9px] font-bold uppercase tracking-tighter">Luxury 50ml</button>
+                </div>
             </div>
-            <button onclick="sendToWhatsApp()" class="bg-[#333333] hover:bg-tortora text-white px-8 py-4 font-bold tracking-widest text-xs uppercase transition-all shadow-xl">
-                Invia Ordine
-            </button>
+
+            <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+        </div>
+
+        <div class="lg:w-1/3">
+            <div class="bg-white p-6 shadow-2xl sticky top-24 border border-gray-100">
+                <h2 class="text-xs font-bold uppercase tracking-widest mb-6 border-b pb-4 text-gray-400">Il Tuo Ordine</h2>
+                
+                <div id="cartList" class="space-y-3 mb-8 max-h-[350px] overflow-y-auto pr-2">
+                    <p class="text-gray-400 text-[10px] uppercase tracking-widest text-center py-10">Carrello vuoto</p>
+                </div>
+
+                <div id="promoBox" class="hidden bg-[#f4f1ee] p-5 mb-6 border border-[#d1c7bc]">
+                    <p id="promoText" class="text-[10px] font-bold text-[#8d8478] uppercase leading-relaxed text-center"></p>
+                    <div id="freebieBtn" class="mt-4 hidden">
+                        <button onclick="startFreebieSelection()" class="w-full bg-[#8d8478] text-white py-4 text-[10px] font-black uppercase tracking-[0.2em] flex justify-center items-center gap-3 shadow-lg">
+                            Scegli Omaggio <span class="text-xl">+</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="border-t pt-6 space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="text-[10px] font-bold uppercase text-gray-400">Totale Ordine:</span>
+                        <span id="choganTotal" class="text-3xl font-light text-antracite">0.00 €</span>
+                    </div>
+                    <div class="bg-[#fdfdfd] border border-gray-100 p-3 text-center">
+                        <p class="text-[9px] text-gray-400 uppercase mb-1">In profumeria avresti speso: <span id="retailTotal" class="line-through">0.00 €</span></p>
+                        <p class="text-[11px] font-bold text-green-600 uppercase italic">Risparmio: <span id="savings">0.00 €</span></p>
+                    </div>
+                </div>
+
+                <button onclick="sendToWhatsApp()" class="w-full bg-antracite text-white py-5 mt-6 font-bold uppercase text-[10px] tracking-[0.2em] hover:bg-tortora transition-all shadow-xl">
+                    Conferma su WhatsApp
+                </button>
+            </div>
         </div>
     </div>
 
@@ -59,116 +83,166 @@
         let allItems = [];
         let cart = [];
         let freebie = null;
-        const WHATSAPP_NUMBER = "391234567890"; // Inserisci qui il tuo numero
+        const WHATSAPP_NUMBER = "391234567890"; // Inserisci il tuo numero
 
-        async function loadData() {
-            try {
-                const response = await fetch('LISTINO PROFUMI CHOGAN.csv');
-                const data = await response.text();
-                const rows = data.split('\n').slice(1);
+        const files = [
+            'Profumi uomo-Tabella 1.csv',
+            'Profumi donna-Tabella 1.csv',
+            'Profumi Unisex-Tabella 1.csv',
+            'Profumi Luxury-Tabella 1.csv'
+        ];
+
+        async function loadAllData() {
+            for (const file of files) {
+                try {
+                    const res = await fetch(file);
+                    const data = await res.text();
+                    parseCSV(data, file.includes('Luxury'));
+                } catch (e) { console.error("Errore file:", file); }
+            }
+            displayProducts(allItems);
+        }
+
+        function parseCSV(data, isLuxury) {
+            const rows = data.split('\n').slice(1);
+            rows.forEach(row => {
+                const col = row.split(';');
+                if (col.length < 5) return;
+                const nome = col[0].trim(), isp = col[1].trim();
+
+                // 15ml
+                if (col[3] && col[4] && col[4] !== "") {
+                    allItems.push({ cod: col[3].trim(), nome, isp, formato: "15ml", prezzo: parseFloat(col[4].replace(',','.')) });
+                }
                 
-                rows.forEach(row => {
-                    const col = row.split(';');
-                    if (col.length < 9) return;
-                    
-                    const nome = col[0].trim();
-                    const isp = col[1].trim();
-                    const marca = col[2].trim();
-
-                    // Esplosione formati dal CSV
-                    if (col[3] && col[4]) { // 15ml
-                        allItems.push({ cod: col[3].trim(), nome, isp, formato: "15ml", prezzo: parseFloat(col[4].replace(',','.')) });
+                if (isLuxury) {
+                    // 50ml Luxury
+                    if (col[5] && col[6]) {
+                        allItems.push({ cod: col[5].trim(), nome, isp, formato: "50ml Luxury", prezzo: parseFloat(col[6].replace(',','.')) });
                     }
-                    if (col[5] && col[6]) { // 30ml
+                } else {
+                    // 30ml standard
+                    if (col[5] && col[6]) {
                         allItems.push({ cod: col[5].trim(), nome, isp, formato: "30ml", prezzo: parseFloat(col[6].replace(',','.')) });
                     }
-                    if (col[7] && col[8]) { // 70ml o 50ml (Luxury)
-                        const f = (col[7].startsWith('T')) ? "70ml" : "70ml"; // Logica semplificata, correggeremo con i filtri
-                        const prezzo = parseFloat(col[8].replace(',','.'));
-                        const formatoEffettivo = (prezzo > 50) ? "50ml (Luxury)" : "70ml";
-                        allItems.push({ cod: col[7].trim(), nome, isp, formato: formatoEffettivo, prezzo });
+                    // 70ml standard
+                    if (col[7] && col[8]) {
+                        allItems.push({ cod: col[7].trim(), nome, isp, formato: "70ml", prezzo: parseFloat(col[8].replace(',','.')) });
                     }
-                });
-                displayProducts(allItems);
-            } catch (e) { console.error("Errore caricamento"); }
+                }
+            });
         }
 
         function displayProducts(list) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = list.map(p => `
-                <div class="bg-white p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-[9px] font-bold text-tortora border border-tortora px-2 py-0.5 uppercase tracking-widest">${p.formato}</span>
-                            <span class="text-[9px] text-gray-400 font-mono">COD: ${p.cod}</span>
-                        </div>
-                        <h3 class="font-bold text-sm tracking-widest uppercase mb-1">${p.nome}</h3>
-                        <p class="text-[10px] text-gray-400 italic mb-4 uppercase">Ispirazione: ${p.isp}</p>
+                <div class="bg-white p-6 border border-gray-100 flex justify-between items-center hover:shadow-md transition">
+                    <div class="flex-1">
+                        <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-tortora border border-gray-200 uppercase tracking-widest">${p.formato}</span>
+                        <h3 class="font-bold text-xs uppercase tracking-widest mt-2">${p.nome}</h3>
+                        <p class="text-[9px] text-gray-400 uppercase mt-1 italic">Ispirazione: ${p.isp}</p>
+                        <p class="mt-2 font-light text-antracite text-lg">${p.prezzo.toFixed(2)} €</p>
                     </div>
-                    <div class="flex justify-between items-center mt-4 border-t pt-4">
-                        <p class="font-bold text-lg text-antracite tracking-tighter">${p.prezzo.toFixed(2)} €</p>
-                        <button onclick="handleSelection('${p.cod}')" class="bg-tortora text-white px-4 py-2 text-xs font-bold uppercase hover:bg-antracite transition">+</button>
-                    </div>
+                    <button onclick="addToCart('${p.cod}')" class="bg-gray-50 hover:bg-tortora hover:text-white w-12 h-12 rounded-full font-light text-2xl transition-all shadow-sm">+</button>
                 </div>
             `).join('');
         }
 
-        function handleSelection(codice) {
+        function addToCart(codice) {
             const item = allItems.find(p => p.cod === codice);
-            if (document.body.classList.contains('choosing-freebie')) {
+            if (document.body.classList.contains('choosing-freebie-mode')) {
                 if (item.formato === "30ml") {
                     freebie = item;
-                    document.body.classList.remove('choosing-freebie');
-                    updateCartUI();
-                } else { alert("Scegli un 30ml per l'omaggio"); }
+                    document.body.classList.remove('choosing-freebie-mode');
+                    document.getElementById('selectionBanner').classList.add('hidden');
+                    updateUI();
+                    filterBy('all');
+                } else { alert("Per l'omaggio seleziona un formato da 30ml"); }
                 return;
             }
             cart.push(item);
-            updateCartUI();
+            updateUI();
         }
 
-        function updateCartUI() {
-            const total = cart.reduce((sum, p) => sum + p.prezzo, 0);
-            const count70ml = cart.filter(p => p.formato === '70ml').length;
-            const alertBox = document.getElementById('canvassAlert');
+        function updateUI() {
+            const cartList = document.getElementById('cartList');
+            cartList.innerHTML = cart.map((p, i) => `
+                <div class="cart-item flex justify-between items-center text-[10px] bg-white p-3 shadow-sm border border-gray-50">
+                    <span class="font-bold uppercase">${p.nome} <span class="block font-normal text-gray-400">${p.formato} - ${p.cod}</span></span>
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold">${p.prezzo.toFixed(2)}€</span>
+                        <button onclick="removeFromCart(${i})" class="text-gray-300 hover:text-red-500 font-bold">X</button>
+                    </div>
+                </div>
+            `).join('');
 
-            if (count70ml === 1) {
-                alertBox.classList.remove('hidden');
-                alertBox.innerHTML = "💡 AGGIUNGI UN ALTRO 70ML PER UN 30ML IN REGALO";
-            } else if (count70ml >= 2) {
-                alertBox.classList.remove('hidden');
-                alertBox.innerHTML = freebie ? `✅ OMAGGIO: ${freebie.nome}` : `🎁 <button onclick="startFreebieSelection()" class="underline">CLICCA QUI E SCEGLI IL TUO 30ML IN REGALO</button>`;
-            } else { alertBox.classList.add('hidden'); }
+            if (freebie) {
+                cartList.innerHTML += `
+                    <div class="flex justify-between items-center text-[10px] bg-[#fdfaf5] p-3 border border-[#e8dfd5] mt-2">
+                        <span class="font-bold text-[#8d8478] uppercase">🎁 OMAGGIO: ${freebie.nome} <span class="block font-normal">30ml - ${freebie.cod}</span></span>
+                        <span class="font-bold text-[#8d8478]">GRATIS</span>
+                    </div>`;
+            }
 
-            document.getElementById('cartTotal').innerText = `${total.toFixed(2)} €`;
+            const count70 = cart.filter(p => p.formato === '70ml').length;
+            const count50 = cart.filter(p => p.formato.includes('50ml')).length;
+            const promoBox = document.getElementById('promoBox');
+            const freebieBtn = document.getElementById('freebieBtn');
+
+            if (count70 === 1 || count50 === 1) {
+                promoBox.classList.remove('hidden');
+                document.getElementById('promoText').innerText = "💡 Aggiungi un altro pezzo (70ml o 50ml) per ricevere un 30ml in REGALO!";
+                freebieBtn.classList.add('hidden');
+            } else if (count70 >= 2 || count50 >= 2) {
+                promoBox.classList.remove('hidden');
+                document.getElementById('promoText').innerText = "✨ PROMO ATTIVA: HAI DIRITTO A UN 30ML IN OMAGGIO!";
+                if (!freebie) freebieBtn.classList.remove('hidden');
+                else freebieBtn.classList.add('hidden');
+            } else { promoBox.classList.add('hidden'); }
+
+            const total = cart.reduce((s, p) => s + p.prezzo, 0);
+            const retailTotal = cart.reduce((s, p) => s + (p.formato.includes('50ml') ? 310 : 145), 0) + (freebie ? 80 : 0);
+            document.getElementById('choganTotal').innerText = `${total.toFixed(2)} €`;
+            document.getElementById('retailTotal').innerText = `${retailTotal.toFixed(2)} €`;
+            document.getElementById('savings').innerText = `${(retailTotal - total).toFixed(2)} €`;
         }
 
         function startFreebieSelection() {
-            document.body.classList.add('choosing-freebie');
-            window.scrollTo(0,0);
-            alert("Scegli ora un profumo da 30ml cliccando sul tasto +");
+            document.body.classList.add('choosing-freebie-mode');
+            document.getElementById('selectionBanner').classList.remove('hidden');
+            filterBy('30ml');
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function sendToWhatsApp() {
-            if (cart.length === 0) return;
-            let msg = `*ORDINE NUOVO CATALOGO*\n\n`;
-            cart.forEach(p => msg += `• ${p.cod} | ${p.nome} (${p.formato}) - ${p.prezzo.toFixed(2)}€\n`);
-            if (freebie) msg += `\n🎁 *OMAGGIO SELEZIONATO:*\n• ${freebie.cod} | ${freebie.nome} (30ml) - GRATIS\n`;
-            msg += `\n*TOTALE: ${document.getElementById('cartTotal').innerText}*`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        function removeFromCart(i) {
+            cart.splice(i, 1);
+            if (cart.filter(p => p.formato === '70ml').length < 2 && cart.filter(p => p.formato.includes('50ml')).length < 2) freebie = null;
+            updateUI();
+        }
+
+        function filterBy(f) {
+            if (f === 'all') displayProducts(allItems);
+            else displayProducts(allItems.filter(p => p.formato.toLowerCase().includes(f.toLowerCase())));
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            displayProducts(allItems.filter(p => p.nome.toLowerCase().includes(term) || p.isp.toLowerCase().includes(term) || p.cod.toLowerCase().includes(term)));
+            const t = e.target.value.toLowerCase();
+            displayProducts(allItems.filter(p => p.nome.toLowerCase().includes(t) || p.isp.toLowerCase().includes(t) || p.cod.toLowerCase().includes(t)));
         });
 
-        function filterBy(type) {
-            if(type === 'all') displayProducts(allItems);
-            else displayProducts(allItems.filter(p => p.formato.toLowerCase().includes(type.toLowerCase())));
+        function sendToWhatsApp() {
+            if (cart.length === 0) return alert("Carrello vuoto");
+            if ((cart.filter(p=>p.formato==='70ml').length >= 2 || cart.filter(p=>p.formato.includes('50ml')).length >= 2) && !freebie) return alert("Scegli l'omaggio!");
+            
+            let msg = `*ORDINE LUXURY ESSENCES*\n\n`;
+            cart.forEach(p => msg += `• ${p.cod} | ${p.nome} (${p.formato}) - ${p.prezzo.toFixed(2)}€\n`);
+            if (freebie) msg += `\n🎁 *OMAGGIO SELEZIONATO:*\n• ${freebie.cod} | ${freebie.nome} (30ml) - GRATIS\n`;
+            msg += `\n*TOTALE: ${document.getElementById('choganTotal').innerText}*`;
+            msg += `\n💰 Risparmio calcolato: ${document.getElementById('savings').innerText}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        loadData();
+        loadAllData();
     </script>
 </body>
 </html>
