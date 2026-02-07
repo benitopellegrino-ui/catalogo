@@ -71,7 +71,7 @@
                     <div class="choganTotalDisplay text-4xl font-light text-antracite">0.00 €</div>
                     <p class="marketTotalDisplay text-[10px] text-gray-400 line-through uppercase font-bold">In negozio: 0.00 €</p>
                     <div class="bg-green-50 py-2 px-4 rounded-lg mt-2 font-black text-green-700 text-[11px] uppercase">Risparmio: <span class="savingsDisplay">0.00 €</span></div>
-                    <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 mt-4 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA ORDINE WHATSAPP</button>
+                    <button onclick="sendToWhatsApp()" class="w-full bg-[#333333] text-[#bdae9b] py-5 mt-4 font-black uppercase text-[12px] border-2 border-[#bdae9b]">INVIA WHATSAPP</button>
                 </div>
             </div>
         </div>
@@ -107,55 +107,52 @@
         let freebie = null;
         let currentFormat = 'all';
         let currentGender = 'all';
-        const WHATSAPP_NUMBER = "393278278502";
+        const WHATSAPP_NUMBER = "393275428780";
 
         async function loadAllData() {
             const files = [
-                { name: 'Profumi uomo-Tabella 1.csv', gender: 'uomo' },
-                { name: 'Profumi donna-Tabella 1.csv', gender: 'donna' },
-                { name: 'Profumi Unisex-Tabella 1.csv', gender: 'unisex' },
-                { name: 'Profumi Luxury-Tabella 1.csv', gender: 'luxury' }
+                'Profumi uomo-Tabella 1.csv',
+                'Profumi donna-Tabella 1.csv',
+                'Profumi Unisex-Tabella 1.csv',
+                'Profumi Luxury-Tabella 1.csv'
             ];
-            for (const f of files) {
+            for (const file of files) {
                 try {
-                    const res = await fetch(f.name);
+                    const res = await fetch(file);
                     const data = await res.text();
-                    parseCSV(data, f.gender);
-                } catch (e) { console.error("Errore caricamento file:", f.name); }
+                    parseCSV(data, file.includes('Luxury'));
+                } catch (e) { console.error("Errore:", file); }
             }
             applyFilters();
         }
 
-        function parseCSV(data, baseGender) {
-            const rows = data.split('\n').slice(1);
+        function parseCSV(data, isLuxury) {
+            const rows = data.split('\n').filter(r => r.trim() !== '').slice(1);
             rows.forEach(row => {
                 const col = row.split(';');
                 if (col.length < 5) return;
-                const nome = col[0].trim(), isp = col[1].trim();
                 
-                // Determina il genere
-                let finalGender = baseGender;
-                if (baseGender === 'luxury') {
-                    const genderCol = col[col.length - 1].trim().toLowerCase();
-                    finalGender = genderCol.includes('uomo') ? 'uomo' : genderCol.includes('donna') ? 'donna' : 'unisex';
-                }
+                const nome = col[0].trim();
+                const isp = col[1].trim();
+                // Il genere è sempre l'ultima colonna in base ai tuoi nuovi file
+                const genere = col[col.length - 1].trim().toLowerCase();
 
                 const add = (cod, pr, mk, form) => {
-                    if (cod && pr && cod.trim() !== "") {
-                        allItems.push({
-                            cod: cod.trim(), nome, isp, formato: form,
-                            prezzo: parseFloat(pr.replace('€', '').trim()),
-                            mkt: parseFloat((mk || "0").toString().replace('€', '').trim()) || (form.includes('70ml') ? 145 : form.includes('30ml') ? 80 : 35),
-                            genere: finalGender
-                        });
+                    if (cod && cod.trim() !== "" && pr) {
+                        const prezzo = parseFloat(pr.toString().replace('€', '').replace(',', '.').trim());
+                        const mkt = parseFloat((mk || "0").toString().replace('€', '').replace(',', '.').trim()) || (form.includes('70ml') ? 145 : form.includes('30ml') ? 80 : form.includes('50ml') ? 310 : 35);
+                        
+                        allItems.push({ cod: cod.trim(), nome, isp, formato: form, prezzo, mkt, genere });
                     }
                 };
 
-                add(col[3], col[4], col[5], baseGender === 'luxury' ? "15ml Luxury" : "15ml");
-                if (baseGender === 'luxury') add(col[6], col[7], col[8], "50ml Luxury");
-                else {
-                    add(col[6], col[7], col[8], "30ml");
-                    add(col[9], col[10], col[11], "70ml");
+                if (isLuxury) {
+                    add(col[3], col[4], 35, "15ml Luxury");
+                    add(col[5], col[6], 310, "50ml Luxury");
+                } else {
+                    add(col[3], col[4], 35, "15ml");
+                    add(col[5], col[6], 80, "30ml");
+                    add(col[7], col[8], 145, "70ml");
                 }
             });
         }
@@ -163,6 +160,7 @@
         function applyFilters() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             let filtered = allItems;
+            
             if (currentFormat !== 'all') filtered = filtered.filter(p => p.formato.toLowerCase().includes(currentFormat));
             if (currentGender !== 'all') filtered = filtered.filter(p => p.genere === currentGender);
             if (search) filtered = filtered.filter(p => p.nome.toLowerCase().includes(search) || p.isp.toLowerCase().includes(search) || p.cod.toLowerCase().includes(search));
@@ -175,7 +173,7 @@
                             <span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded uppercase">${p.genere}</span>
                         </div>
                         <h3 class="font-bold text-xs uppercase tracking-widest mt-1">${p.nome}</h3>
-                        <p class="text-[9px] text-gray-400 uppercase italic tracking-wider line-clamp-1">${p.isp}</p>
+                        <p class="text-[9px] text-gray-400 uppercase italic tracking-wider">${p.isp}</p>
                         <p class="mt-1 font-light text-antracite text-lg">${p.prezzo.toFixed(2)} €</p>
                     </div>
                     <button onclick="addToCart('${p.cod}')" class="bg-gray-50 w-12 h-12 rounded-full text-2xl shadow-sm active:bg-tortora active:text-white transition-all">+</button>
