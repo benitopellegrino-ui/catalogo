@@ -29,6 +29,8 @@
 
     <header class="bg-[#333333] text-[#f4f4f2] p-6 shadow-xl text-center sticky top-0 z-50">
         <h1 class="text-2xl font-light uppercase tracking-[0.3em]">Luxury Essences</h1>
+        <div id="collabWelcome" class="hidden text-[9px] text-[#bdae9b] mt-1 tracking-widest uppercase font-bold"></div>
+        
         <div id="selectionBanner" class="hidden bg-[#bdae9b] text-[#333333] text-[10px] py-2 mt-2 tracking-[0.2em] uppercase font-bold animate-pulse text-center">
             ✨ Seleziona ora l'omaggio da 30ml dalla lista ✨
         </div>
@@ -129,7 +131,19 @@
     </div>
 
     <script>
-        const WHATSAPP_NUMBER = "393275428780";
+        // --- LOGICA LINK PERSONALIZZATI ---
+        const urlParams = new URLSearchParams(window.location.search);
+        // Se non trova ?tel= usa il tuo numero predefinito
+        const WHATSAPP_NUMBER = urlParams.get('tel') || "393278278502"; 
+        const COLLAB_NAME = urlParams.get('nome');
+
+        // Mostra il benvenuto se c'è un nome nel link
+        if(COLLAB_NAME) {
+            const welcomeDiv = document.getElementById('collabWelcome');
+            welcomeDiv.innerText = `Catalogo di ${decodeURIComponent(COLLAB_NAME)}`;
+            welcomeDiv.classList.remove('hidden');
+        }
+
         let allItems = [];
         let cart = [];
         let freebie = null;
@@ -138,10 +152,11 @@
 
         async function loadData() {
             try {
+                // Il file deve chiamarsi esattamente così nella stessa cartella dell'HTML
                 const res = await fetch('LISTINO PROFUMI CHOGAN-Tabella 1.csv');
                 const data = await res.text();
                 parseCSV(data);
-            } catch (e) { console.error("CSV non trovato"); }
+            } catch (e) { console.error("CSV non trovato sul server."); }
         }
 
         function parseCSV(data) {
@@ -279,10 +294,13 @@
         function sendToWhatsApp() {
             if (!cart.length) return alert("Carrello vuoto!");
             let msg = `*ORDINE LUXURY ESSENCES*\n\n`;
+            if(COLLAB_NAME) msg += `*Collaboratore:* ${decodeURIComponent(COLLAB_NAME)}\n\n`;
             cart.forEach(p => msg += `• ${p.cod} | ${p.nome} (${p.formato}) - ${p.prezzo.toFixed(2)}€\n`);
             if(freebie) msg += `\n🎁 *OMAGGIO:* ${freebie.nome} (30ml)\n`;
             msg += `\n*TOTALE: ${document.querySelector('.choganTotalDisplay').innerText}*`;
             msg += `\n💰 *RISPARMIO: ${document.querySelector('.savingsDisplay').innerText}*`;
+            
+            // Invia al numero dinamico
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
